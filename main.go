@@ -49,6 +49,7 @@ func main() {
 	//连接nacos
 	go nacosconfig.Init(ch)
 
+	<-ch
 	//连接数据库
 	go dbconfig.MysqlConnect()
 	//连接redis

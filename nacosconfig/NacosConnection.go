@@ -25,6 +25,7 @@ type mysql struct {
 	DSN string `yaml:"dsn"`
 }
 
+// Init TODO The nacos config ready get from command argument
 func Init(ch chan int) {
 	// 创建clientConfig
 	clientConfig := constant.ClientConfig{
@@ -127,7 +128,7 @@ func Init(ch chan int) {
 
 	success, err := namingClient.RegisterInstance(vo.RegisterInstanceParam{
 		Ip:          "127.0.0.1",
-		Port:        8848,
+		Port:        8849,
 		ServiceName: "oh_my_gin.go",
 		Weight:      10,
 		Enable:      true,
