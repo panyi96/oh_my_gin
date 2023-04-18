@@ -128,7 +128,7 @@ func Init(ch chan int) {
 
 	success, err := namingClient.RegisterInstance(vo.RegisterInstanceParam{
 		Ip:          "127.0.0.1",
-		Port:        8849,
+		Port:        8848,
 		ServiceName: "oh_my_gin.go",
 		Weight:      10,
 		Enable:      true,
