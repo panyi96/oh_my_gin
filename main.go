@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"io"
@@ -10,6 +11,7 @@ import (
 	"ohmygin/pojo"
 	"ohmygin/router"
 	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,6 +22,21 @@ func setupLogging() {
 }
 
 func main() {
+	args := os.Args
+	args = args[1:]
+	if len(args) == 0 {
+		fmt.Println("required [ipAddr] [port] [grpcPort]")
+		panic("must have argument")
+	}
+	ipAddr := args[0]
+	port, err := strconv.ParseUint(args[1], 0, 16)
+	if err != nil {
+		panic("port is not number")
+	}
+	grpcPort, err := strconv.ParseUint(args[2], 0, 16)
+	if err != nil {
+		panic("grpcPort is not number")
+	}
 	//日志输出文件,必须放在最上面
 	//强制日志颜色化
 	gin.ForceConsoleColor()
@@ -47,7 +64,7 @@ func main() {
 
 	ch := make(chan int)
 	//连接nacos
-	go nacosconfig.Init(ch)
+	go nacosconfig.Init(ipAddr, port, grpcPort, ch)
 
 	<-ch
 	//连接数据库

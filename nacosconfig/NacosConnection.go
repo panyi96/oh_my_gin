@@ -25,8 +25,8 @@ type mysql struct {
 	DSN string `yaml:"dsn"`
 }
 
-// Init TODO The nacos config ready get from command argument
-func Init(ch chan int) {
+// Init
+func Init(ipAddr string, port uint64, grpcPort uint64, ch chan int) {
 	// 创建clientConfig
 	clientConfig := constant.ClientConfig{
 		NamespaceId:         "ea50ebb8-bbe3-43e7-8d7d-7c23b0f87fa2", // 如果需要支持多namespace，我们可以创建多个client,它们有不同的NamespaceId。当namespace是public时，此处填空字符串。
@@ -51,9 +51,9 @@ func Init(ch chan int) {
 	// 至少一个ServerConfig
 	serverConfigs := []constant.ServerConfig{
 		{
-			IpAddr:   "127.0.0.1",
-			Port:     8848,
-			GrpcPort: 9848,
+			IpAddr:   ipAddr,
+			Port:     port,
+			GrpcPort: grpcPort,
 		},
 	}
 
@@ -127,8 +127,8 @@ func Init(ch chan int) {
 	}
 
 	success, err := namingClient.RegisterInstance(vo.RegisterInstanceParam{
-		Ip:          "127.0.0.1",
-		Port:        8848,
+		Ip:          ipAddr,
+		Port:        port,
 		ServiceName: "oh_my_gin.go",
 		Weight:      10,
 		Enable:      true,
