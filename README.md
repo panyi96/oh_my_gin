@@ -1,2 +1,1 @@
-# oh_my_gin
-gin框架demo
+## My first gin framework and Docker practice
