@@ -4,6 +4,7 @@ WORKDIR /src
 RUN GOPROXY="https://proxy.golang.com.cn,direct" GO111MODULE=on go build
 
 FROM alpine:latest
+RUN rm -f /bin/ohmygin
 COPY --from=builder /src/ohmygin /bin/ohmygin
 WORKDIR /bin
 EXPOSE 1234

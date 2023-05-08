@@ -197,3 +197,17 @@ CREATE TABLE `users` (
                          PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+insert into nacos_config.config_info (id, data_id, group_id, content, md5, gmt_create, gmt_modified, src_user, src_ip, app_name, tenant_id, c_desc, c_use, effect, type, c_schema)
+values  (3, 'oh-my-gin-dev.yaml', 'study', 'projectName: oh_my_gin
+version: v1.0.0
+
+redis:
+ addr: redis:9736
+ password: RZJC!Bg^S*b2n3D1
+ db: 0
+
+mysql:
+ dsn: root:RZJC!Bg^S*b2n3D1@tcp(mysql:3306)/study?charset=utf8mb4&parseTime=True&loc=Local', 'b8836e27a8f422436fafa25a2df1f7bc', '2023-05-08 02:10:54', '2023-05-08 02:10:54', null, '172.23.0.1', '', 'ea50ebb8-bbe3-43e7-8d7d-7c23b0f87fa2', '', null, null, 'yaml', null);
+
+insert into nacos_config.tenant_info (id, kp, tenant_id, tenant_name, tenant_desc, create_source, gmt_create, gmt_modified)
+values  (1, '1', 'ea50ebb8-bbe3-43e7-8d7d-7c23b0f87fa2', 'study', 'study', 'nacos', 1683511611448, 1683511611448);
