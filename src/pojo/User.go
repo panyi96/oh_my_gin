@@ -1,7 +1,7 @@
 package pojo
 
 import (
-	"ohmygin/dbconfig"
+	"ohmygin/src/dbconfig"
 )
 
 type User struct {

@@ -4,7 +4,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
-	"ohmygin/nacosconfig"
+	"ohmygin/src/nacosconfig"
 )
 
 var DBConnect *gorm.DB

@@ -1,18 +1,18 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"io"
-	"ohmygin/dbconfig"
-	"ohmygin/middlewares"
-	"ohmygin/nacosconfig"
-	"ohmygin/pojo"
-	"ohmygin/router"
+	dbconfig2 "ohmygin/src/dbconfig"
+	"ohmygin/src/middlewares"
+	"ohmygin/src/nacosconfig"
+	"ohmygin/src/pojo"
+	"ohmygin/src/router"
 	"os"
+	"strconv"
 )
 
 func setupLogging() {
@@ -21,11 +21,10 @@ func setupLogging() {
 }
 
 func main() {
-	ipAddr := flag.String("NACOS_IP", "127.0.0.1", "nacos Ip Addr")
-	port := flag.Uint64("PORT", 8848, "nacos port")
-	grpcPort := flag.Uint64("GRPC_PORT", 9848, "nacos Grpc port")
-
-	fmt.Printf("=== USE NACOS CONFIG=== \nNACOS_IP=%s\nPORT=%d\nGRPC_PORT=%d\n", *ipAddr, *port, *grpcPort)
+	fmt.Println("version 1.0.0")
+	ipAddr, port, grpcPort := getNacosParamFromEnv()
+	fmt.Printf("=== USE NACOS CONFIG=== \nNACOS_IP=%s\nPORT=%d\nGRPC_PORT=%d\n",
+		ipAddr, port, grpcPort)
 	//日志输出文件,必须放在最上面
 	//强制日志颜色化
 	gin.ForceConsoleColor()
@@ -53,13 +52,38 @@ func main() {
 
 	ch := make(chan int)
 	//连接nacos
-	go nacosconfig.Init(*ipAddr, *port, *grpcPort, ch)
+	go nacosconfig.Init(ipAddr, port, grpcPort, ch)
 
 	<-ch
 	//连接数据库
-	go dbconfig.MysqlConnect()
+	go dbconfig2.MysqlConnect()
 	//连接redis
-	go dbconfig.RedisConnect()
+	go dbconfig2.RedisConnect()
 
 	r.Run(":1234")
+}
+
+func getNacosParamFromEnv() (string, uint64, uint64) {
+	ipAddr := os.Getenv("NACOS_IP")
+	if "" == ipAddr {
+		fmt.Println("nacos_ip env is blank, use default")
+		ipAddr = "asd"
+	}
+	portStr := os.Getenv("PORT")
+	if "" == portStr {
+		portStr = "8848"
+	}
+	grpcPortStr := os.Getenv("GRPC_PORT")
+	if "" == grpcPortStr {
+		grpcPortStr = "9848"
+	}
+	port, err := strconv.ParseUint(portStr, 0, 64)
+	if nil != err {
+		panic(err)
+	}
+	grpcPort, err := strconv.ParseUint(grpcPortStr, 0, 64)
+	if nil != err {
+		panic(err)
+	}
+	return ipAddr, port, grpcPort
 }

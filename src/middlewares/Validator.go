@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/go-playground/validator/v10"
-	"ohmygin/pojo"
+	"ohmygin/src/pojo"
 	"regexp"
 )
 

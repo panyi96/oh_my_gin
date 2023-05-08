@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"ohmygin/middlewares"
-	"ohmygin/pojo"
+	"ohmygin/src/middlewares"
+	"ohmygin/src/pojo"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

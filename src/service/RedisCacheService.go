@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"net/http"
-	"ohmygin/dbconfig"
+	"ohmygin/src/dbconfig"
 )
 
 func CacheUser(handler gin.HandlerFunc, paramField string, keyPattern string, _struct interface{}) gin.HandlerFunc {

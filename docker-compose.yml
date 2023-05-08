@@ -1,0 +1,82 @@
+version: "3.9"
+services:
+  ohmygin:
+    image: pany1/ohmygin:1.0.1
+    #build from dockerfile of current folder
+    build:
+      context: ./
+      dockerfile: dockerfile
+    #expose port to host machine
+    ports:
+      - "1234:1234"
+    #The `depends_on` without `condition` only ensure container sequence of run,
+    #can not guarantee service of container is or not ready to used
+    env_file:
+      - cnf/.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - my_app_network
+    volumes:
+      - golang_data:/bin
+  nacos:
+    image: nacos/nacos-server:2.0.2
+    networks:
+      - my_app_network
+    env_file:
+      - cnf/.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8888:8848"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS 'http://localhost:8848/nacos/v1/console' || exit 1" ]
+      interval: 30s
+      retries: 5
+      timeout: 10s
+  mysql:
+    image: mysql:8.0.33
+    ports:
+      - "3306:3306"
+    networks:
+      - my_app_network
+    env_file:
+      - cnf/.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./cnf/my.cnf:/etc/my.cnf
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 3
+      timeout: 5s
+  redis:
+    image: redis:6-alpine3.17
+    networks:
+      - my_app_network
+    env_file:
+      - cnf/.env
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping || exit pong" ]
+      interval: 10s
+      retries: 3
+      timeout: 5s
+volumes:
+  golang_data:
+    name: golang_data
+  mysql_data:
+    name: mysql_data
+  redis_data:
+    name: redis_data
+networks:
+  my_app_network:
+    driver: bridge
+    name: my_app_network

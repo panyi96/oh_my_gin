@@ -2,7 +2,7 @@ package dbconfig
 
 import (
 	"github.com/redis/go-redis/v9"
-	"ohmygin/nacosconfig"
+	"ohmygin/src/nacosconfig"
 )
 
 var RedisClient *redis.Client
